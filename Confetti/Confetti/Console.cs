@@ -8,8 +8,8 @@ using SFML.Graphics;
 using SFML.System;
 
 namespace Confetti {
-    public class Console: Chunk {
 
+    public class Console: Canvas {
 
         private Sprite Sprite { get; }
         private RenderTexture RenderTexture { get; }
@@ -17,6 +17,11 @@ namespace Confetti {
 
         public uint Width { get => (uint)(Columns * Font.GlyphWidth * _scale); }
         public uint Height { get => (uint)(Rows * Font.GlyphHeight * _scale); }
+
+        public uint Frame { get; private set; }
+
+        public Vector2i CursorPhysicalPosition { get; private set; } = new(0, 0);
+        public bool Cursor { get; set; } = true;
 
         private float _scale = 1;
         public float Scale {
@@ -43,21 +48,22 @@ namespace Confetti {
                     Font.Glyph[Buffer[x, y].ForegroundCharacter].Color = Buffer[x, y].ForegroundColor;
                     Font.Glyph[Buffer[x, y].ForegroundCharacter].Position = posXY;
                     RenderTexture.Draw(Font.Glyph[Buffer[x, y].ForegroundCharacter]);
-                    //if (Cursor && Buffer[x, y].Cursor && (Frame % 60 < 30)) {
-                    //    Font.Glyph['▂'].Color = new Color(255, 255, 255, 80);
-                    //    Font.Glyph['▂'].Position = posXY;
-                    //    RenderTexture.Draw(Font.Sprite['▂']);
-                    //}
+                    if (Cursor && (Frame % 60 < 30)) {
+                        Font.Glyph['▂'].Color = new Color(255, 255, 255, 80);
+                        Font.Glyph['▂'].Position = (Vector2f)CursorPhysicalPosition;
+                        RenderTexture.Draw(Font.Glyph['▂']);
+                    }
                 }
             }
         }
 
-        public void Draw(RenderWindow window, float x = 0, float y = 0) {
+        public void CopyTo(RenderWindow window, float x = 0, float y = 0) {
             RenderTexture.Clear();
             RenderCells();
             RenderTexture.Display();
             Sprite.Position = new Vector2f(x, y);
             window.Draw(Sprite);
+            Frame++;
         }
     }
 }

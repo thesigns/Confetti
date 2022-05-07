@@ -8,7 +8,7 @@ using SFML.Graphics;
 using SFML.System;
 
 namespace Confetti {
-    public class Chunk {
+    public class Canvas {
 
 
         public int Columns { get; }
@@ -21,16 +21,11 @@ namespace Confetti {
         private Color foregroundColor;
         private Color backgroundColor;
 
-        Chunk? Parent { get; }
-
-        public Chunk(int columns, int rows) : this(null, columns, rows) { }
-
-        public Chunk(Chunk? parent, int columns, int rows) {
+        public Canvas(int columns, int rows) {
             oldCursorPosition = new(0, 0);
             cursorPosition = new(0, 0);
             foregroundColor = new Color(160, 160, 160);
             backgroundColor = Color.Black;
-            Parent = parent;
             Columns = columns;
             Rows = rows;
             Buffer = new Cell[Columns, Rows];
@@ -81,18 +76,15 @@ namespace Confetti {
             }
         }
 
-        public virtual void Transfer(int x, int y) {
-            if (Parent == null) {
-                return;
-            }
+        public virtual void CopyTo(Canvas destination, int x, int y) {
             for (int row = 0; row < Rows; row++) {
                 int targetRow = row + y;
                 for (int col = 0; col < Columns; col++) {
                     int targetCol = col + x;
-                    if (targetCol < 0 || targetCol > Parent.Columns - 1 || targetRow < 0 || targetRow > Parent.Rows - 1) {
+                    if (targetCol < 0 || targetCol > destination.Columns - 1 || targetRow < 0 || targetRow > destination.Rows - 1) {
                         continue;
                     }
-                    Parent.Buffer[targetCol, targetRow] = Buffer[col, row];
+                    destination.Buffer[targetCol, targetRow] = Buffer[col, row];
                 }
             }
         }

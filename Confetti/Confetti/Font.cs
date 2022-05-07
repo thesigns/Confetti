@@ -7,7 +7,7 @@ namespace Confetti {
         public Sprite[] Glyph { get; }
         public int GlyphWidth { get; }
         public int GlyphHeight { get; }
-        public char[] CharSet { get; }
+        private ushort[] CharSetTable;
 
         public Font(string pngPath, string txtPath) {
 
@@ -22,7 +22,7 @@ namespace Confetti {
             Glyph = new Sprite[char.MaxValue];
             GlyphWidth = (int)imageTexture.Size.X / cols;
             GlyphHeight = (int)imageTexture.Size.Y / rows;
-            CharSet = new char[rows * cols];
+            CharSetTable = new ushort[ushort.MaxValue];
 
             int index = 0;
             for (int y = 0; y < rows; y++) {
@@ -30,9 +30,17 @@ namespace Confetti {
                     char c = lines[y][x];
                     Glyph[c] = new Sprite(imageTexture);
                     Glyph[c].TextureRect = new IntRect(x * GlyphWidth, y * GlyphHeight, GlyphWidth, GlyphHeight);
-                    CharSet[index] = c;
+                    CharSetTable[index] = c;
                     index++;
                 }
+            }
+        }
+
+        public ushort CharSet(ushort index) {
+            if (Glyph[CharSetTable[index]] == null) {
+                return CharSetTable[0];
+            } else {
+                return CharSetTable[index];
             }
         }
 
