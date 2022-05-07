@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SFML.Window;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 
 namespace Confetti {
 
-    public class Console: Canvas {
+    public class Console : Canvas {
 
         private Sprite Sprite { get; }
         private RenderTexture RenderTexture { get; }
@@ -58,6 +52,7 @@ namespace Confetti {
         }
 
         public void CopyTo(RenderWindow window, float x = 0, float y = 0) {
+            CursorPhysicalPosition = new Vector2i(cursorPosition.X * Font.GlyphWidth, cursorPosition.Y * Font.GlyphHeight);
             RenderTexture.Clear();
             RenderCells();
             RenderTexture.Display();

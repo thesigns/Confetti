@@ -19,11 +19,11 @@ public static class Example {
         window.SetFramerateLimit(60);
         window.Closed += (sender, args) => window.Close();
 
-        byte count = 0;
+        int count = 0;
         while (window.IsOpen) {
             window.DispatchEvents();
             window.Clear();
-            console.AddCharacter(font.CharSet(count));
+            console.Print(count, false);
             console.CopyTo(window, 0, 0);
             window.Display();
             count++;
