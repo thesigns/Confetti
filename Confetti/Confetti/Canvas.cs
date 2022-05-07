@@ -110,7 +110,7 @@ namespace Confetti {
             if (newLine) Locate(startPosition.X, cursorPosition.Y + 1);
         }
 
-        public virtual void CopyTo(Canvas destination, int x, int y) {
+        public void CopyTo(Canvas destination, int x, int y) {
             for (int row = 0; row < Rows; row++) {
                 int targetRow = row + y;
                 for (int col = 0; col < Columns; col++) {

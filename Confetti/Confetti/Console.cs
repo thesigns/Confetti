@@ -39,11 +39,15 @@ namespace Confetti {
                     Font.Glyph[Buffer[x, y].BackgroundCharacter].Color = Buffer[x, y].BackgroundColor;
                     Font.Glyph[Buffer[x, y].BackgroundCharacter].Position = posXY;
                     RenderTexture.Draw(Font.Glyph[Buffer[x, y].BackgroundCharacter]);
-                    Font.Glyph[Buffer[x, y].ForegroundCharacter].Color = Buffer[x, y].ForegroundColor;
-                    Font.Glyph[Buffer[x, y].ForegroundCharacter].Position = posXY;
-                    RenderTexture.Draw(Font.Glyph[Buffer[x, y].ForegroundCharacter]);
+                    var foregroundCharacter = Buffer[x, y].ForegroundCharacter;
+                    if (Font.Glyph[foregroundCharacter] == null) {
+                        foregroundCharacter = Font.CharSet(0);
+                    }
+                    Font.Glyph[foregroundCharacter].Color = Buffer[x, y].ForegroundColor;
+                    Font.Glyph[foregroundCharacter].Position = posXY;
+                    RenderTexture.Draw(Font.Glyph[foregroundCharacter]);
                     if (Cursor && (Frame % 60 < 30)) {
-                        Font.Glyph['▂'].Color = new Color(255, 255, 255, 80);
+                        Font.Glyph['▂'].Color = new Color(255, 255, 255, 127);
                         Font.Glyph['▂'].Position = (Vector2f)CursorPhysicalPosition;
                         RenderTexture.Draw(Font.Glyph['▂']);
                     }

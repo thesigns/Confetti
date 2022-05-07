@@ -1,4 +1,7 @@
 ﻿using SFML.Graphics;
+using System;
+using System.IO;
+using System.IO.Compression;
 
 namespace Confetti {
 
@@ -42,6 +45,23 @@ namespace Confetti {
             } else {
                 return CharSetTable[index];
             }
+        }
+
+        private List<string>? ConvertToLines(string text) {
+            if(text.Length == 0) {
+                return null;
+            };
+            List<string> lines = new List<string>() { "" };
+            var lineNum = 0;
+            foreach (var character in text) {
+                if (character.ToString() == "\n") {
+                    lineNum++;
+                    lines.Add("");
+                } else {
+                    lines[lineNum] += character;
+                }
+            }
+            return null;
         }
 
         private void ConvertColor(Image image, Color fromColor, Color toColor) {
