@@ -9,20 +9,20 @@ namespace Confetti {
         private RenderTexture RenderTexture { get; }
         private Font Font { get; }
 
-        public uint Width { get => (uint)(Columns * Font.GlyphWidth * _scale); }
-        public uint Height { get => (uint)(Rows * Font.GlyphHeight * _scale); }
-
-        public uint Frame { get; private set; }
+        public uint Width { get => (uint)(Columns * Font.GlyphWidth * scale); }
+        public uint Height { get => (uint)(Rows * Font.GlyphHeight * scale); }
 
         public Vector2i CursorPhysicalPosition { get; private set; } = new(0, 0);
         public bool Cursor { get; set; } = true;
 
-        private float _scale = 1;
+        private DateTime creationDate = DateTime.Now;
+
+        private float scale = 1;
         public float Scale {
-            get { return _scale; }
+            get { return scale; }
             set {
-                _scale = value;
-                Sprite.Scale = new Vector2f(_scale, _scale);
+                scale = value;
+                Sprite.Scale = new Vector2f(scale, scale);
             }
         }
 
@@ -33,6 +33,7 @@ namespace Confetti {
         }
 
         private void RenderCells() {
+            TimeSpan ts = DateTime.Now - creationDate;
             for (int y = 0; y < Rows; y++) {
                 for (int x = 0; x < Columns; x++) {
                     var posXY = new Vector2f(x * Font.GlyphWidth, y * Font.GlyphHeight);
@@ -46,7 +47,7 @@ namespace Confetti {
                     Font.Glyph[foregroundCharacter].Color = Buffer[x, y].ForegroundColor;
                     Font.Glyph[foregroundCharacter].Position = posXY;
                     RenderTexture.Draw(Font.Glyph[foregroundCharacter]);
-                    if (Cursor && (Frame % 60 < 30)) {
+                    if (Cursor && (ts.Milliseconds % 1000 < 500)) {
                         Font.Glyph['▂'].Color = new Color(255, 255, 255, 127);
                         Font.Glyph['▂'].Position = (Vector2f)CursorPhysicalPosition;
                         RenderTexture.Draw(Font.Glyph['▂']);
@@ -62,7 +63,6 @@ namespace Confetti {
             RenderTexture.Display();
             Sprite.Position = new Vector2f(x, y);
             window.Draw(Sprite);
-            Frame++;
         }
     }
 }
